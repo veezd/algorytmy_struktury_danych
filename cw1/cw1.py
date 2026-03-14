@@ -1,4 +1,4 @@
-#NIESKONCZONE
+#SKONCZONE
 
 class matrix:
     def __init__(self, list, o=0):
@@ -103,7 +103,12 @@ class matrix:
                 if(self._matrix[i] != val._matrix[i]):
                     return False
             return True
-
+    
+    def swap_row(self,row1,row2): # nowa metoda do chio
+        #row1 do wymiany
+        #row2 docelowe miejsce gdzie przeniesie sie row1
+        self._matrix[row1], self._matrix[row2] = self._matrix[row2], self._matrix[row1]
+        return None
                 
 
 def transposition(matrix_in):
@@ -124,13 +129,22 @@ def det_2_2(matrix_in):
         return matrix_in[0][0]*matrix_in[1][1] - matrix_in[1][0]*matrix_in[0][1]
 
 def chio_method(matrix_in):
+    sign = 1 # przy zamianie wierszy zmienia sie znak det
     if(matrix_in.size()[0] != matrix_in.size()[1]): # warunek na macierz kwadratowa
         raise ValueError("Macierz musi byc kwadratowa!") 
+
+    if matrix_in[0][0] == 0:
+        for rows in range (1,matrix_in.size()[0]): # start od 1 bo wiadomo ze wiersz 1 ma a11 = 0
+            if matrix_in[rows][0] != 0 :
+                matrix_in.swap_row(0,rows)
+                sign *= -1
+                break
+        else:
+            return 0
     
     a11 = matrix_in[0][0]
 
-    if a11 == 0:
-        raise ValueError("A11 = 0, niedopuszczalne")
+
     if matrix_in.size()[0] == 2:
         return det_2_2(matrix_in)
     
@@ -144,7 +158,7 @@ def chio_method(matrix_in):
             ])
             matrix_out[i][j] = det_2_2(temp_matrix)
 
-    return (1 / (a11 ** (matrix_in.size()[0]-2))) * chio_method(matrix_out)
+    return sign * (1 / (a11 ** (matrix_in.size()[0]-2))) * chio_method(matrix_out)
 
     
 A = matrix([
@@ -154,7 +168,31 @@ A = matrix([
 [9 , 1 , 0 , 7 , 0],
 [1 , 4 , 7 , 2 , 2]
 ] )
-print(chio_method(A))           
 
-    
+B =  matrix([
+     [0 , 1 , 1 , 2 , 3],
+     [4 , 2 , 1 , 7 , 3],
+     [2 , 1 , 2 , 4 , 7],
+     [9 , 1 , 0 , 7 , 0],
+     [1 , 4 , 7 , 2 , 2]
+    ] )
+C = matrix([
+     [0 , 0 , 0 , 0 , 0],
+     [4 , 2 , 1 , 7 , 3],
+     [2 , 1 , 2 , 4 , 7],
+     [9 , 1 , 0 , 7 , 0],
+     [1 , 4 , 7 , 2 , 2]
+    ])
+D =  matrix( [
+     [0 , 1 , 1 , 2 , 3],
+     [0 , 2 , 1 , 7 , 3],
+     [0 , 1 , 2 , 4 , 7],
+     [0 , 1 , 0 , 7 , 0],
+     [0 , 4 , 7 , 2 , 2]
+    ])
+print(chio_method(A))   
+print(chio_method(B))
+print(chio_method(C))           
+print(chio_method(D))           
+
 

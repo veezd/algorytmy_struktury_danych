@@ -1,30 +1,47 @@
 #SKONCZONE
+
 class linkedList:
     def __init__(self):
         self.head = None
+        self.tail = None
     # create robi to konstruktor
     
     def destroy(self): # destroy
+        ptr = self.head
+
+        while ptr is not None:
+            temp = ptr.next
+            ptr.next = None
+            ptr.prev = None
+            ptr = temp
+
         self.head = None
-        
+        self.tail = None
+                
     def add(self, data): # na poczatek
         node = listNode(data)
+        if(self.head == None and self.tail == None): # Lista jest pusta
+            self.head = node
+            self.tail = node
+            return None
+
+        self.head.prev = node
         node.next = self.head
         self.head = node
+
+        return None
     
     def append(self,data): # na koniec
         node = listNode(data)
 
-        if(self.head == None): # Jezeli nie ma zadnych Node to uczyn go pierwszym
+        if(self.head == None and self.tail == None): # Jezeli nie ma zadnych Node to uczyn go pierwszym
             self.head = node
+            self.tail = node
             return None
         
-        ptr = self.head
-
-        while(ptr.next != None): #Iteruj az nie dojdziemy do ostatniego Node
-            ptr = ptr.next
-            
-        ptr.next = node
+        self.tail.next = node
+        node.prev = self.tail
+        self.tail = node
 
         return None
 
@@ -32,30 +49,35 @@ class linkedList:
         if self.head is None :
             return None
 
-        self.head = self.head.next
+        if(self.head.next == None): #1 element w liscie 
+            self.head = None
+            self.tail = None
+            return None
+        
+        second_node = self.head.next
+        second_node.prev = None
+        self.head = second_node
 
         return None
         
 
     def pop_back(self): # remove_end
-        if (self.head == None):
+        if (self.tail == None):
             return None
         
-        if (self.head.next == None):
+        if (self.tail.prev == None): # 1 element w liscie
             self.head = None
+            self.tail = None
             return None
         
-        ptr = self.head
-
-        while(ptr.next.next != None):
-            ptr = ptr.next
-
-        ptr.next = None
+        second_to_last = self.tail.prev
+        second_to_last.next = None
+        self.tail = second_to_last
 
         return None
 
     def is_empty(self):
-        if(self.head == None):
+        if(self.head == None and self.tail == None):
             return True
         else:
             return False
@@ -85,11 +107,21 @@ class linkedList:
 
         return output
     
+    def printBackwards(self): # aka print od tylu
+        ptr = self.tail
+        output = ""
+
+        while(ptr != None):
+            output += "-> " + str(ptr.data) + "\n"
+            ptr = ptr.prev
+        return output
+    
 
 class listNode:
     def __init__(self,data):
         self.data = data
         self.next = None
+        self.prev = None
 
 lista_uczelni = [
     ('AGH', 'Kraków', 1919),
@@ -111,6 +143,7 @@ uczelnie.add(lista_uczelni[4])
 uczelnie.add(lista_uczelni[5])
 #
 print(uczelnie)
+print(uczelnie.printBackwards())
 #
 print("Długość listy : " + str(len(uczelnie)))
 #
@@ -121,6 +154,7 @@ print("Obecny HEAD listy: " + str(uczelnie.get()))
 uczelnie.pop_back()
 #
 print(uczelnie)
+print(uczelnie.printBackwards())
 #
 uczelnie.destroy()
 #
