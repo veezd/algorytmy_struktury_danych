@@ -1,4 +1,4 @@
-#NIESKONCZONE
+#SKONCZONE
 class queue:
     def __init__(self,length=5):
         self.tab = [None for i in range(length)]
@@ -35,18 +35,22 @@ class queue:
         return var
     
     def enqueue(self,data):
-        self.tab[self.save_i] = data # wstaw dane
+        self.tab[self.save_i] = data 
         self.save_i += 1
         self.size += 1
 
-
-        if(self.save_i >= len(self.tab)): # petla
+        if self.save_i >= len(self.tab): 
             self.save_i = 0
             
-        if(self.read_i == self.save_i): # sprawdza czy indeksy sa takie same
-            for i in range(len(self.tab)):
-               self.tab.insert(self.read_i,None)
-               self.read_i +=1
+        if self.read_i == self.save_i: 
+            length = len(self.tab)
+            
+            self.tab.extend([None for _ in range(length)])
+            
+            for i in range(length - 1, self.read_i - 1, -1):
+                self.tab[i + length] = self.tab[i]
+                self.tab[i] = None 
+            self.read_i += length
 
     def __str__(self):
         it_r = self.read_i # kopie do iteracji w funkcji
@@ -65,6 +69,7 @@ class queue:
 
 # Utworzenie pustej kolejki
 q = queue()
+
 # Enqueue wpisuje 4 dane
 for i in range(1,5):
     q.enqueue(i)
@@ -90,8 +95,5 @@ print(q.tab)
 while not (q.is_empty()):
     print(q.dequeue())
 
-# Wypisanie pustej kolejki
-    
+# Wypisanie kolejki
 print(q)
-
-
