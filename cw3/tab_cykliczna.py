@@ -1,3 +1,4 @@
+#NIESKONCZONE
 class queue:
     def __init__(self,length=5):
         self.tab = [None for i in range(length)]
@@ -64,7 +65,6 @@ class queue:
 
 # Utworzenie pustej kolejki
 q = queue()
-
 # Enqueue wpisuje 4 dane
 for i in range(1,5):
     q.enqueue(i)
@@ -89,5 +89,9 @@ print(q.tab)
 
 while not (q.is_empty()):
     print(q.dequeue())
+
+# Wypisanie pustej kolejki
+    
+print(q)
 
 
